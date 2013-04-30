@@ -16,7 +16,7 @@
 			<div class="span12">
 				<div class="span6">
 					<a href="" ng-click="sortKey='title'; reverse=!reverse;" >
-						<i class="">{{['red','green'][+reverse]}}</i>
+						<i class="">((['red','green'][+reverse]))</i>
 						<span>Title</span>
 					</a>
 				</div>
@@ -42,14 +42,14 @@
 			<div class="row-fluid" ng-repeat="item in data | orderBy:sortKey:reverse" ng-model="data" ng-controller="ModalCtrl">
 				<div class="span12 table-item" ng-click="open(item)">
 					<div modal="shouldBeOpen" close="close()" options="opts">
-						<form action="/cart/apiSet/{{item.id}}" method="POST">
+						<form action="/cart/apiSet/((item.id))" method="POST">
 							{% csrf_token %}
 					        <div class="modal-header">
-					            <h4>I'm a modal! {{item.title}}</h4>
+					            <h4>I'm a modal! ((item.title))</h4>
 					        </div>
 					        <div class="modal-body">
 					            <ul>
-					                <li ng-repeat="thing in item">{{thing}}</li>
+					                <li ng-repeat="thing in item">((thing))</li>
 					            </ul>
 					        </div>
 					        <div class="modal-footer">
@@ -60,21 +60,21 @@
 				    </div>
 					<div class="span6">
 						<i class="icon-file"></i>
-						<span>{{item.title}}</span>
+						<span>((item.title))</span>
 					</div>
 					<div class="span2">
-						<span>{{item.eta | dateFilter | date:"MM/dd/yyyy @ h:mma"}}</span>
+						<span>((item.eta | dateFilter | date:"MM/dd/yyyy @ h:mma"))</span>
 					</div>
 					<div class="span2">
-						<span>{{item.cost | costFilter}}</span>
+						<span>((item.cost | costFilter))</span>
 					</div>
 					<div class="span2">
-						<span>{{['red','green'][+item.done]}}</span>
-						<span>{{+item.id}}</span>
+						<span>((['red','green'][+item.done]))</span>
+						<span>((+item.id))</span>
 					</div>
 				</div>
 			</div>
 		</div>
-		<span ng-model="newCounter">Items added: {{newCounter}}</span>
+		<span ng-model="newCounter">Items added: ((newCounter))</span>
 	</form>
 </div>

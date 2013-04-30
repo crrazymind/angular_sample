@@ -25,3 +25,11 @@ class Choice(models.Model):
 
     def __unicode__(self):
             return self.choice_text
+
+
+class ExtData(models.Model):
+    title = models.CharField(max_length=1000)
+    cost = models.FloatField(default=0)
+    duration = models.FloatField(default=0)
+    done = models.BooleanField()
+    eta = models.DateTimeField()

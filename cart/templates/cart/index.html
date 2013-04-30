@@ -1,0 +1,40 @@
+	{% load static %}
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <title>My AngularJS App</title>
+  <link rel="stylesheet" href="{% get_static_prefix %}app/css/app.css"/>
+  <link rel="stylesheet" href="{% get_static_prefix %}app/css/bootstrap.css"/>
+</head>
+<body>
+	{% csrf_token %}
+	<div class="container-fluid">
+		<div class="navbar" bs-navbar>
+			<div class="navbar-inner">
+				<a class="brand" href="#">Home</a>
+				<ul class="nav">
+					<li data-match-route="/view1"><a href="#/view1">Home</a></li>
+					<li data-match-route="/view2"><a href="#/view2">view1</a></li>
+					<li data-match-route="/view3"><a href="#/view3">view3</a></li>
+				</ul>
+			</div>
+		</div>
+		<div ng-view></div>
+
+		<div>Angular seed app: v<span app-version></span></div>
+	</div>
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+  -->
+  <script src="{% get_static_prefix %}app/lib/angular/angular.js"></script>
+  <script src="{% get_static_prefix %}app/lib/angular/angular-resource.js"></script>
+  <script src="{% get_static_prefix %}app/lib/ui-bootstrap-tpls-0.2.0.js"></script>
+  <script src="{% get_static_prefix %}app/lib/jquery-2.0.0.min.js"></script>
+  <script src="{% get_static_prefix %}app/js/app.js"></script>
+  <script src="{% get_static_prefix %}app/js/services.js"></script>
+  <script src="{% get_static_prefix %}app/js/controllers.js"></script>
+  <script src="{% get_static_prefix %}app/js/filters.js"></script>
+  <script src="{% get_static_prefix %}app/js/directives.js"></script>
+</body>
+</html>
