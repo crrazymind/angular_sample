@@ -32,3 +32,13 @@
   padding-top: 5px; 
   border-bottom: 1px solid #ccc;
 }
+.modal form{
+  margin: 0;
+}
+.modal .edit-modal-label{
+  float: left;
+  width: 100px;
+}
+.edit-row{
+  min-height: 40px;
+}

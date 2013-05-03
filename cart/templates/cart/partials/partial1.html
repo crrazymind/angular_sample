@@ -1,3 +1,5 @@
+{% load verbatim %}
+{% verbatim %}
 <div class="container-fluid" ng-controller="getData">
 	<p>This is the partial for view 1.</p>
 	<form>
@@ -16,7 +18,7 @@
 			<div class="span12">
 				<div class="span6">
 					<a href="" ng-click="sortKey='title'; reverse=!reverse;" >
-						<i class="">((['red','green'][+reverse]))</i>
+						<i class="">{{['red','green'][+reverse]}}</i>
 						<span>Title</span>
 					</a>
 				</div>
@@ -42,39 +44,58 @@
 			<div class="row-fluid" ng-repeat="item in data | orderBy:sortKey:reverse" ng-model="data" ng-controller="ModalCtrl">
 				<div class="span12 table-item" ng-click="open(item)">
 					<div modal="shouldBeOpen" close="close()" options="opts">
-						<form action="/cart/apiSet/((item.id))" method="POST">
-							{% csrf_token %}
+						<form class="edit-item-form" action="{{url}}{{item.id}}" ng-model="formData" method="POST">
+							{% endverbatim %}
+								{% csrf_token %}
+							{% verbatim %}
 					        <div class="modal-header">
-					            <h4>I'm a modal! ((item.title))</h4>
+					            <h4>I'm a modal! {{item.title}}</h4>
 					        </div>
 					        <div class="modal-body">
-					            <ul>
-					                <li ng-repeat="thing in item">((thing))</li>
+					            <ul class="nav nav-list">
+					                <li ng-repeat="(key, thing) in item" class="{{key|modalItemsFilter}} row-fluid edit-row" ng-controller="EditModalController">
+					                	<ng-switch on="key">
+					                		<div ng-switch-when="done" class="span12">
+					                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
+					                			<input type="checkbox" ng-model="thing"/>
+					                		</div>
+					                		<div ng-switch-when="eta" class="span12">
+					                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
+					                			<input type="datetime-local" name="dtl" step="7200" value="{{thing | ToHTMLDate}}">
+					                		</div>
+					                		<div ng-switch-default class="span12">
+					                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
+					                			<input type="text" ng-model="thing">
+					                		</div>
+					                	</ng-switch>
+
+					                </li>
 					            </ul>
 					        </div>
 					        <div class="modal-footer">
-					            <button class="btn btn-primary save" ng-click="save()">Save</button>
+					            <button class="btn btn-primary save" ng-click="save(item.id, data)">Save</button>
 					            <button type="button" class="btn btn-warning cancel" ng-click="close()">Cancel</button>
 					        </div>
 				    	</form>
 				    </div>
 					<div class="span6">
 						<i class="icon-file"></i>
-						<span>((item.title))</span>
+						<span>{{item.title}}</span>
 					</div>
 					<div class="span2">
-						<span>((item.eta | dateFilter | date:"MM/dd/yyyy @ h:mma"))</span>
+						<span>{{item.eta | dateFilter | date:"MM/dd/yyyy @ h:mma"}}</span>
 					</div>
 					<div class="span2">
-						<span>((item.cost | costFilter))</span>
+						<span>{{item.cost | costFilter}}</span>
 					</div>
 					<div class="span2">
-						<span>((['red','green'][+item.done]))</span>
-						<span>((+item.id))</span>
+						<span>{{['red','green'][+item.done]}}</span>
+						<span>{{+item.id}}</span>
 					</div>
 				</div>
 			</div>
 		</div>
-		<span ng-model="newCounter">Items added: ((newCounter))</span>
+		<span ng-model="newCounter">Items added: {{newCounter}}</span>
 	</form>
 </div>
+{% endverbatim %}

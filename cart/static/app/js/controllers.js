@@ -65,25 +65,60 @@ function getData($scope, $http, $compile, $filter){
 	}
 }
 
-var ModalCtrl = function ($scope) {
-  $scope.open = function () {
-    $scope.shouldBeOpen = true;
-  };
-
-  $scope.close = function () {
-    $scope.closeMsg = 'I was closed at: ' + new Date();
-    $scope.shouldBeOpen = false;
-  };
-
-	$scope.save = function () {
-		console.log("save")
+var ModalCtrl = function ($scope, $element, $http) {
+	$scope.open = function () {
+		$scope.shouldBeOpen = true;
+	};
+	$scope.url = '/cart/apiSet/';
+	$scope.close = function () {
+		$scope.closeMsg = 'I was closed at: ' + new Date();
+		$scope.shouldBeOpen = false;
 	};
 
-  $scope.items = ['item1', 'item2'];
+	$scope.save = function (data) {
+		var data = {}
+		console.log(arguments)
+		var e = window.event;
+		if(e.type === "click") e.preventDefault();
+		/*$http({
+		    method: 'POST',
+		    url: $scope.url + data.id,
+		    data: data,
+		    headers: {
+		    	'Content-Type': 'application/x-www-form-urlencoded',
+		    	'X-CSRFToken': getCookie('csrftoken')
+		   	}
+		}).success(function(data, status) {
+			console.log(data, status)
+		}).error(function(data, status) {
+			console.log(data, 'submit error')
+		})*/
+	};
 
   $scope.opts = {
     backdropFade: true,
     dialogFade:true
   };
-
 };
+
+function EditModalController($scope, $element){
+	$scope.change = function(){
+		console.log(1)
+	}
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
