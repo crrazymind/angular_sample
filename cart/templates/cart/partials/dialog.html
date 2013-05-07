@@ -1,0 +1,53 @@
+{% load verbatim %}
+{% verbatim %}
+<div class="modal-wrapper">
+<!--div modal="shouldBeOpen" close="close()" options="opts"-->
+	<form class="edit-item-form" action="{{url}}{{origItem.id}}" ng-model="formData" method="POST">
+        <div class="modal-header">
+            <h4>{{origItem.title}}</h4>
+        </div>
+        <div class="modal-body">
+            <ul class="nav nav-list">
+                <li ng-repeat="item in dialogItem" class="{{key|modalItemsFilter}} row-fluid edit-row">
+                	<ng-switch on="item.key">
+                		<div ng-switch-when="done" class="span12">
+                			<label class="edit-modal-label" for="#">{{item.key | capitalize}}:</label>
+                			<input type="checkbox" ng-model="item.value"/>
+                		</div>
+                		<div ng-switch-when="eta" class="span12">
+                			<label class="edit-modal-label" for="#">{{item.key | capitalize}}:</label>
+                			<input type="datetime-local" name="dtl" step="7200" ng-model="item.value" value="{{item.value | ToHTMLDate}}">
+                		</div>
+                		<div ng-switch-default class="span12">
+                			<label class="edit-modal-label" for="#">{{item.key | capitalize}}:</label>
+                			<input type="text" ng-model="item.value">
+                		</div>
+                	</ng-switch>
+                </li>
+                <!--li ng-repeat="(key, value) in dialogItem" class="{{key|modalItemsFilter}} row-fluid edit-row">
+                	<ng-switch on="key">
+                		<div ng-switch-when="done" class="span12">
+                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
+                			<input type="checkbox" ng-model="dialogItem[key]"/>
+                		</div>
+                		<div ng-switch-when="eta" class="span12">
+                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
+                			<input type="datetime-local" name="dtl" step="7200" value="{{value | ToHTMLDate}}">
+                		</div>
+                		<div ng-switch-default class="span12">
+                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
+                			<input type="text" ng-model="dialogItem[key]">
+                		</div>
+                	</ng-switch>
+
+                </li-->
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary save" ng-click="save(dialogItem)">Save</button>
+            <button type="button" class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+        </div>
+	</form>
+</div>
+{% endverbatim %}
+{% csrf_token %}

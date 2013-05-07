@@ -9,7 +9,7 @@ angular.module('myApp.controllers', []).
 		
 	}]);
 
-function getData($scope, $http, $compile, $filter){
+function getData($scope, $http, $compile, $filter, $dialog){
 	$scope.data = {};
 	$http({method: 'GET', url: '/cart/api/'}).
 	//$http({method: 'GET', url: '/cart/stock/'}).
@@ -22,7 +22,7 @@ function getData($scope, $http, $compile, $filter){
 		error(function(data, status, headers, config) {
 			console.log("load error", status)
 		});
-	$scope.sortKey = '-title';
+	$scope.sortKey = '-id';
 	$scope.reverse = true;
 	$scope.query = "";
 	$scope.newCounter = 0;
@@ -33,11 +33,13 @@ function getData($scope, $http, $compile, $filter){
 			"title":"Trololo",
 			"eta":"Thu Dec 27 2012",
 			"duration":0,
+			"id": "new",
 			"done":1
 		};
 		$scope.newCounter++;
 		$scope.data.push(obj);
 	}
+
 	$scope.className = function(){
 		if($scope.reverse){
 			return  "icon-arrow-up";
@@ -52,6 +54,7 @@ function getData($scope, $http, $compile, $filter){
         }
         return String(item).toLowerCase().indexOf(query.toLowerCase()) !== -1;
     };
+
 	$scope.search = function(){
 		$scope.filteredItems = $filter('filter')($scope.dataCache, function (item) {
 			
@@ -63,24 +66,61 @@ function getData($scope, $http, $compile, $filter){
         });
         $scope.data = $scope.filteredItems;
 	}
+
+	$scope.editDialogOpen = function(item){
+		var itemToEdit = item;
+		$dialog.dialog(angular.extend($scope.dialogOptions,{
+			resolve: {
+				item: function() {
+					return angular.copy(itemToEdit);
+				}
+			}
+		})).open()
+		.then(function(result){
+			console.log("then result", result)
+			if(result) {
+				angular.copy(result, itemToEdit);                
+			}
+			itemToEdit = undefined;
+		});
+	}
+
+	$scope.dialogOptions = {
+		backdropFade: true,
+		dialogFade:true,
+		controller: 'DialogController',
+    	templateUrl: 'partials/dialog.html'
+	};
 }
 
-var ModalCtrl = function ($scope, $element, $http) {
-	$scope.open = function () {
-		$scope.shouldBeOpen = true;
-	};
+// the dialog is injected in the specified controller
+function DialogController($scope, $http, dialog, item){
+	var editItem = [];
+	for(var i in item){
+		if(i !== "$$hashKey" && i !== "id")
+		editItem.push({"key": i, "value": item[i]})
+	}
+  	$scope.dialogItem =  editItem;
+  	$scope.origItem =  item;
 	$scope.url = '/cart/apiSet/';
-	$scope.close = function () {
-		$scope.closeMsg = 'I was closed at: ' + new Date();
-		$scope.shouldBeOpen = false;
-	};
 
-	$scope.save = function (data) {
-		var data = {}
-		console.log(arguments)
+	$scope.save = function(result) {
+		for (var i = 0; i < result.length; i++) {
+			$scope.origItem[result[i].key] = result[i].value
+		};
+		$scope.saveData($scope.origItem.id,$scope.origItem)
+		dialog.close($scope.origItem);
 		var e = window.event;
 		if(e.type === "click") e.preventDefault();
-		/*$http({
+	};
+  
+	$scope.close = function(){
+		dialog.close(undefined);
+	};
+
+	$scope.saveData = function (id, data) {
+		console.log("saveData", data)
+		$http({
 		    method: 'POST',
 		    url: $scope.url + data.id,
 		    data: data,
@@ -92,19 +132,8 @@ var ModalCtrl = function ($scope, $element, $http) {
 			console.log(data, status)
 		}).error(function(data, status) {
 			console.log(data, 'submit error')
-		})*/
+		})
 	};
-
-  $scope.opts = {
-    backdropFade: true,
-    dialogFade:true
-  };
-};
-
-function EditModalController($scope, $element){
-	$scope.change = function(){
-		console.log(1)
-	}
 }
 
 function getCookie(name) {

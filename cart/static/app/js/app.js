@@ -5,3 +5,4 @@ angular.module('myApp', ['ui.bootstrap', 'myApp.filters', 'myApp.services', 'myA
     $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
     $routeProvider.otherwise({redirectTo: '/view1'});
   }]);
+DialogController.$inject = ['$scope', '$http', 'dialog', 'item'];

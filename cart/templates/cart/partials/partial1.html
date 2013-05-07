@@ -41,43 +41,8 @@
 			</div>
 		</div>
 		<div class="row-fluid" style="border:1px solid #000; border-width:0 0 1px; padding:10px 0 10px;">
-			<div class="row-fluid" ng-repeat="item in data | orderBy:sortKey:reverse" ng-model="data" ng-controller="ModalCtrl">
-				<div class="span12 table-item" ng-click="open(item)">
-					<div modal="shouldBeOpen" close="close()" options="opts">
-						<form class="edit-item-form" action="{{url}}{{item.id}}" ng-model="formData" method="POST">
-							{% endverbatim %}
-								{% csrf_token %}
-							{% verbatim %}
-					        <div class="modal-header">
-					            <h4>I'm a modal! {{item.title}}</h4>
-					        </div>
-					        <div class="modal-body">
-					            <ul class="nav nav-list">
-					                <li ng-repeat="(key, thing) in item" class="{{key|modalItemsFilter}} row-fluid edit-row" ng-controller="EditModalController">
-					                	<ng-switch on="key">
-					                		<div ng-switch-when="done" class="span12">
-					                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
-					                			<input type="checkbox" ng-model="thing"/>
-					                		</div>
-					                		<div ng-switch-when="eta" class="span12">
-					                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
-					                			<input type="datetime-local" name="dtl" step="7200" value="{{thing | ToHTMLDate}}">
-					                		</div>
-					                		<div ng-switch-default class="span12">
-					                			<label class="edit-modal-label" for="#">{{key | capitalize}}:</label>
-					                			<input type="text" ng-model="thing">
-					                		</div>
-					                	</ng-switch>
-
-					                </li>
-					            </ul>
-					        </div>
-					        <div class="modal-footer">
-					            <button class="btn btn-primary save" ng-click="save(item.id, data)">Save</button>
-					            <button type="button" class="btn btn-warning cancel" ng-click="close()">Cancel</button>
-					        </div>
-				    	</form>
-				    </div>
+			<div class="row-fluid" ng-repeat="item in data | orderBy:sortKey:reverse" ng-model="data">
+				<div class="span12 table-item" ng-click="editDialogOpen(item)">
 					<div class="span6">
 						<i class="icon-file"></i>
 						<span>{{item.title}}</span>
@@ -99,3 +64,4 @@
 	</form>
 </div>
 {% endverbatim %}
+{% csrf_token %}
