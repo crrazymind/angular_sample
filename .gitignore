@@ -5,6 +5,7 @@
 
 # Packages
 *.egg
+*.pyc
 *.egg-info
 dist
 build
