@@ -31,5 +31,5 @@ class ExtData(models.Model):
     title = models.CharField(max_length=1000)
     cost = models.FloatField(default=0)
     duration = models.FloatField(default=0)
-    done = models.BooleanField()
-    eta = models.DateTimeField()
+    done = models.BooleanField(default=False)
+    eta = models.DateTimeField(default=datetime.date.today)

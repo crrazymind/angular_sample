@@ -6,10 +6,13 @@ from cart.models import Choice, Poll, ExtData
 from fetchExternal import FetchExternal
 from django.forms.models import model_to_dict
 import datetime
+import time
 import urllib
 import json
 import os
 import time
+
+from django.views.decorators.csrf import csrf_exempt
 
 
 def memorize(function):
@@ -79,6 +82,14 @@ def getItems(request):
     return HttpResponse(retrieveItems())
 
 
+@csrf_exempt
 def changeItems(request, id):
     print id
+    #if request.method == "POST" and id == "new":
+    if id == "new":
+        data = json.loads(request.raw_post_data)
+        resTime = time.strptime(data["eta"], "%a, %d %b %Y %H:%M:%S %Z")
+        resTime = datetime.datetime.fromtimestamp(time.mktime(resTime))
+        ExtData(title=data["title"], cost=data["cost"], eta=resTime, done=data["done"], duration=data["duration"]).save()
+        return HttpResponse({})
     return HttpResponse({})

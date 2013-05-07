@@ -22,6 +22,7 @@ function getData($scope, $http, $compile, $filter, $dialog){
 		error(function(data, status, headers, config) {
 			console.log("load error", status)
 		});
+	console.log('csrftoken ', getCookie('csrftoken'))
 	$scope.sortKey = '-id';
 	$scope.reverse = true;
 	$scope.query = "";
@@ -31,7 +32,7 @@ function getData($scope, $http, $compile, $filter, $dialog){
 		var obj = {
 			"cost":10,
 			"title":"Trololo",
-			"eta":"Thu Dec 27 2012",
+			"eta": new Date().toUTCString(),
 			"duration":0,
 			"id": "new",
 			"done":1
@@ -119,11 +120,12 @@ function DialogController($scope, $http, dialog, item){
 	};
 
 	$scope.saveData = function (id, data) {
+		data.eta = new Date(data.eta).toUTCString();
 		console.log("saveData", data)
 		$http({
 		    method: 'POST',
 		    url: $scope.url + data.id,
-		    data: data,
+		    data: JSON.stringify(data),
 		    headers: {
 		    	'Content-Type': 'application/x-www-form-urlencoded',
 		    	'X-CSRFToken': getCookie('csrftoken')
