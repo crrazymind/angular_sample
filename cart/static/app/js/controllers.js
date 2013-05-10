@@ -74,11 +74,15 @@ function getData($scope, $http, $compile, $filter, $dialog){
 			resolve: {
 				item: function() {
 					return angular.copy(itemToEdit);
+				},
+				callback: function(){
+					return function onAction(data, result){
+						if(item.id !== result.id) item.id = result.id;
+					}
 				}
 			}
 		})).open()
 		.then(function(result){
-			console.log("then result", result)
 			if(result) {
 				angular.copy(result, itemToEdit);                
 			}
@@ -95,7 +99,7 @@ function getData($scope, $http, $compile, $filter, $dialog){
 }
 
 // the dialog is injected in the specified controller
-function DialogController($scope, $http, dialog, item){
+function DialogController($scope, $http, dialog, item, resultCallback){
 	var editItem = [];
 	for(var i in item){
 		if(i !== "$$hashKey" && i !== "id")
@@ -109,29 +113,31 @@ function DialogController($scope, $http, dialog, item){
 		for (var i = 0; i < result.length; i++) {
 			$scope.origItem[result[i].key] = result[i].value
 		};
-		$scope.saveData($scope.origItem.id,$scope.origItem)
+		$scope.saveData($scope.origItem.id, $scope.origItem, resultCallback)
 		dialog.close($scope.origItem);
 		var e = window.event;
 		if(e.type === "click") e.preventDefault();
 	};
-  
+
+
 	$scope.close = function(){
 		dialog.close(undefined);
 	};
 
-	$scope.saveData = function (id, data) {
+	$scope.saveData = function (id, data, callback) {
 		data.eta = new Date(data.eta).toUTCString();
-		console.log("saveData", data)
+		if(id === "new") id = "new/"+ id;
 		$http({
 		    method: 'POST',
-		    url: $scope.url + data.id,
+		    url: $scope.url + id,
 		    data: JSON.stringify(data),
 		    headers: {
 		    	'Content-Type': 'application/x-www-form-urlencoded',
 		    	'X-CSRFToken': getCookie('csrftoken')
 		   	}
-		}).success(function(data, status) {
-			console.log(data, status)
+		}).success(function(resData, status) {
+			callback.apply($scope, [data, resData])
+
 		}).error(function(data, status) {
 			console.log(data, 'submit error')
 		})

@@ -26,5 +26,6 @@ urlpatterns = patterns('',
     url(r'^app/', 'cart.views.app_view', name="stock"),
     url(r'^stock/', 'cart.views.stock'),
     url(r'^api/', 'cart.views.getItems'),
-    url(r'^apiSet/(?P<id>[a-zA-Z_.]\w*)', 'cart.views.changeItems'),
+    url(r'^apiSet/new/(?P<id>[a-zA-Z_.]\w*)', 'cart.views.changeItems'),
+    url(r'^apiSet/(?P<id>\d*)', 'cart.views.editItems'),
 )

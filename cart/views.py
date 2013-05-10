@@ -15,7 +15,7 @@ import time
 from django.views.decorators.csrf import csrf_exempt
 
 
-def memorize(function):
+def memorize_old(function):
     memo = {}
 
     def wrapper(*args):
@@ -27,6 +27,38 @@ def memorize(function):
             memo[args] = rv
         return rv
     return wrapper
+
+
+class memorize(object):
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+
+    def __call__(self, *args):
+        try:
+            return self.cache[args]
+        except KeyError:
+            print "caching..."
+            value = self.func(*args)
+            self.cache[args] = value
+            return value
+        except TypeError:
+         # uncachable -- for instance, passing a list as an argument.
+         # Better to not cache than to blow up entirely.
+            return self.func(*args)
+
+    def __repr__(self):
+        """Return the function's docstring."""
+        return self.func.__doc__
+
+    def __get__(self, obj, objtype):
+        """Support instance methods."""
+        fn = functools.partial(self.__call__, obj)
+        fn.reset = self._reset
+        return fn
+
+    def _reset(self):
+        self.cache = {}
 
 
 def vote(request, poll_id):
@@ -82,14 +114,33 @@ def getItems(request):
     return HttpResponse(retrieveItems())
 
 
-@csrf_exempt
+#@csrf_exempt
 def changeItems(request, id):
-    print id
-    #if request.method == "POST" and id == "new":
-    if id == "new":
+    if request.method == "POST" and id == "new":
         data = json.loads(request.raw_post_data)
         resTime = time.strptime(data["eta"], "%a, %d %b %Y %H:%M:%S %Z")
         resTime = datetime.datetime.fromtimestamp(time.mktime(resTime))
-        ExtData(title=data["title"], cost=data["cost"], eta=resTime, done=data["done"], duration=data["duration"]).save()
-        return HttpResponse({})
+        res = ExtData(title=data["title"], cost=data["cost"], eta=resTime, done=data["done"], duration=data["duration"])
+        res.save()
+        retrieveItems._reset()
+        retrieveItems()
+        return HttpResponse(json.dumps({"status": "saved", "id": res.id}))
     return HttpResponse({})
+
+
+def convertTime(timeToChange):
+    resTime = time.strptime(timeToChange, "%a, %d %b %Y %H:%M:%S %Z")
+    resTime = datetime.datetime.fromtimestamp(time.mktime(resTime))
+    return resTime
+
+
+def editItems(request, id):
+    if request.method == "POST":
+        data = json.loads(request.raw_post_data)
+        data["eta"] = convertTime(data["eta"])
+        item = ExtData.objects.get(id=id)
+        item.__dict__.update(data)
+        item.save()
+        retrieveItems._reset()
+        retrieveItems()
+    return HttpResponse(json.dumps({"status": "saved", "id": item.id}))
