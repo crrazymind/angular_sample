@@ -6,3 +6,4 @@ angular.module('myApp', ['ui.bootstrap', 'myApp.filters', 'myApp.services', 'myA
     $routeProvider.otherwise({redirectTo: '/view1'});
   }]);
 DialogController.$inject = ['$scope', '$http', 'dialog', 'item', 'callback'];
+getData.$inject = ['GetItems'];

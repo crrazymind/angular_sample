@@ -1,23 +1,11 @@
 {% load verbatim %}
 {% verbatim %}
-<p>This is the partial for view 2.</p>
-<p>
-  Showing of 'interpolate' filter:
-</p>
-<div ng-controller="ModalCtrl">
-    <button class="btn" ng-click="open()">Open me!</button>
-    <div modal="shouldBeOpen" close="close()" options="opts">
-        <div class="modal-header">
-            <h4>I'm a modal!</h4>
-        </div>
-        <div class="modal-body">
-            <ul>
-                <li ng-repeat="item in items">{{item}}</li>
-            </ul>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
-        </div>
+<div ng-controller="tab2init">
+    <p>This is the partial for view 2.</p>
+    <div id="mytimeline">
+        <p>
+          Showing of 'interpolate' filter:
+        </p>
     </div>
 </div>
 {% endverbatim %}

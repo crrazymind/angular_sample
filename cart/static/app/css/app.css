@@ -1,44 +1,44 @@
 /* app css stylesheet */
 
 .menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+	list-style: none;
+	border-bottom: 0.1em solid black;
+	margin-bottom: 2em;
+	padding: 0 0 0.5em;
 }
 
 .menu:before {
-  content: "[";
+	content: "[";
 }
 
 .menu:after {
-  content: "]";
+	content: "]";
 }
 
 .menu > li {
-  display: inline;
+	display: inline;
 }
 
 .menu > li:before {
-  content: "|";
-  padding-right: 0.3em;
+	content: "|";
+	padding-right: 0.3em;
 }
 
 .menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
+	content: "";
+	padding: 0;
 }
 .table-item{
-  padding-top: 5px; 
-  border-bottom: 1px solid #ccc;
+	padding-top: 5px; 
+	border-bottom: 1px solid #ccc;
 }
 .modal form{
-  margin: 0;
+	margin: 0;
 }
 .modal .edit-modal-label{
-  float: left;
-  width: 100px;
+	float: left;
+	width: 100px;
 }
 .edit-row{
-  min-height: 40px;
+	min-height: 40px;
 }
