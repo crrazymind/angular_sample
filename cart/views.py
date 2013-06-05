@@ -7,7 +7,7 @@ from fetchExternal import FetchExternal
 from django.forms.models import model_to_dict
 import datetime
 import time
-import urllib
+import urllib2
 import json
 import os
 import time
@@ -144,3 +144,35 @@ def editItems(request, id):
         retrieveItems._reset()
         retrieveItems()
     return HttpResponse(json.dumps({"status": "saved", "id": item.id}))
+
+
+@memorize
+def fromReddit(request):
+    try:
+        #url = 'http://www.reddit.com/r/all/.json'
+        #url = 'http://www.reddit.com/user/GoodMorningWood/.json'
+        url = 'http://www.reddit.com/.json'
+        data = urllib2.urlopen(url)
+        result = data.read()
+        result = json.loads(result)
+        return HttpResponse(json.dumps(result))
+    except ValueError:
+            print('Could not request data from server', ValueError)
+            return HttpResponse({})
+
+
+@memorize
+def fromRedditUser(request):
+    name = request.GET.dict()['user']
+    print name
+    try:
+        #url = 'http://www.reddit.com/r/all/.json'
+        url = 'http://www.reddit.com/user/' + name + '/.json'
+        #url = 'http://www.reddit.com/.json'
+        data = urllib2.urlopen(url)
+        result = data.read()
+        result = json.loads(result)
+        return HttpResponse(json.dumps(result))
+    except ValueError:
+            print('Could not request data from server', ValueError)
+            return HttpResponse({})

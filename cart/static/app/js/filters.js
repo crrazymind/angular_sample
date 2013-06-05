@@ -25,12 +25,15 @@ angular.module('myApp.filters', []).
 	}).
 	filter('modalItemsFilter', function() {
     	return function(input, scope) {
+    		console.log(input)
+    		if(input && input[0] === "$"){
+    			return '';
+    		}
 	        return input === "id" ? 'hide' : '';
 	    }
 	}).
 	filter('CheckedFilter', function() {
     	return function(input, scope) {
-    		console.log(!!input)
 	        return !!input ? 'checked="checked"' : '';
 	    }
 	}).
@@ -46,3 +49,4 @@ angular.module('myApp.filters', []).
 function dec(data){
 	return data < 10 ? ('0' + data) : data;
 }
+var re = /глава (\d+(\.\d)*)/i

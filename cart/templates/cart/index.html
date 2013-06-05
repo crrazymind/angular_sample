@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{% get_static_prefix %}app/css/app.css"/>
   <link rel="stylesheet" href="{% get_static_prefix %}app/css/bootstrap.css"/>
 </head>
-<body>
+<body ng-app="myApp">
 	{% csrf_token %}
 	<div class="container-fluid">
 		<div class="navbar" bs-navbar>
@@ -21,12 +21,12 @@
 			</div>
 		</div>
 		<div ng-view></div>
-
-		<div>Angular seed app: v<span app-version></span></div>
+    <div>Angular seed app: v<span app-version></span></div>
 	</div>
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
   -->
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   <script src="{% get_static_prefix %}app/lib/angular/angular.js"></script>
   <script src="{% get_static_prefix %}app/lib/angular/angular-resource.js"></script>
   <script src="{% get_static_prefix %}app/lib/ui-bootstrap-tpls-0.3.0.js"></script>

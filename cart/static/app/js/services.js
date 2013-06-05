@@ -5,42 +5,53 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('myApp.services', []).
-	value('version', '0.1');/*.
-	config(function($interpolateProvider) {
-		$interpolateProvider.startSymbol('((');
-		$interpolateProvider.endSymbol('))');
-	});*/
+angular.module('myApp.services', ['ngResource']).
+	value('version', '0.1').
+	factory('ItemsFactory', ['$resource', function($resource) {
+	    var Items = $resource('/cart/api/', {}, {
+	        get: {
+	            method: 'GET'
+	        }
+	    });
+	    return Items;
+	}]).
+	factory('reddit', ['$http', '$q', function($http, $q) {
+		var defer = $q.defer();
 
-angular.module('myApp.dataFactory', ['ngResource']).
-	factory('Data', function($resource){
-		return $resource('phones/:phoneId.json', {}, {
-			query: {method:'GET', params:{phoneId:'phones'}, isArray:true}
-		});
-	}).
-	factory('GetItems', function($resource){
-		return $http('/cart/api/', {}, {
-		//return $resource('phones/:phoneId.json', {}, {
-			query: {
-				method: 'GET',
-				params: {
-					phoneId:'phones'
-				},
-				isArray: true
-			}
-		});
-	});
-
-
-	/*$http({method: 'GET', url: '/cart/api/'}).
-	//$http({method: 'GET', url: '/cart/stock/'}).
-	//var url = 'http://dev.markitondemand.com/Api/Timeseries/jsonp?symbol=AAPL&callback=JSON_CALLBACK'
-	//$http.jsonp(url).
+		$http({method: 'GET', url: '/cart/redditData/'}).
 		success(function(data, status, headers, config) {
-			$scope.data = data;
-			$scope.dataCache = data;
-			$rootScope.data = data;
+			var dataArr = [];
+			for (var i = 0; i < data.data.children.length; i++) {
+				dataArr.push(data.data.children[i].data)
+				
+			};			
+			defer.resolve(dataArr);
 		}).
 		error(function(data, status, headers, config) {
-			console.log("load error", status)
-		});*/
+			console.log("load error", status);
+			return false;
+		});
+	    return defer.promise
+	}]).
+	factory('redditUser', ['$http', '$q', function($http, $q, userName) {
+		return {
+			get: function(userName){
+				var defer = $q.defer();
+				console.log(userName)
+				$http({method: 'GET', url: '/cart/userData/?user=' + userName}).
+				success(function(data, status, headers, config) {
+					var dataArr = [];
+					for (var i = 0; i < data.data.children.length; i++) {
+						dataArr.push(data.data.children[i].data)
+						
+					};			
+					defer.resolve(dataArr);
+				}).
+				error(function(data, status, headers, config) {
+					console.log("load error", arguments);
+					return false;
+				});
+			    return defer.promise
+			}
+		}
+	}]);

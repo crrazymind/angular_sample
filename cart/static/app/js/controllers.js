@@ -9,21 +9,13 @@ angular.module('myApp.controllers', []).
 		//tab2init.call(arguments);
 	}]);
 
-function getData($scope, $http, $compile, $filter, $dialog, $rootScope, GetItems){
-	$scope.data = {};
-	console.log(arguments)
-	$http({method: 'GET', url: '/cart/api/'}).
-	//$http({method: 'GET', url: '/cart/stock/'}).
-	//var url = 'http://dev.markitondemand.com/Api/Timeseries/jsonp?symbol=AAPL&callback=JSON_CALLBACK'
-	//$http.jsonp(url).
-		success(function(data, status, headers, config) {
-			$scope.data = data;
-			$scope.dataCache = data;
-			$rootScope.data = data;
-		}).
-		error(function(data, status, headers, config) {
-			console.log("load error", status)
-		});
+//getData.$inject = ['$scope','ItemsFactory'];
+function getData($scope, $http, $compile, $filter, $dialog, $rootScope, ItemsFactory){
+	
+	$scope.data = ItemsFactory.query();
+	$scope.dataCache =  $rootScope.data = $scope.data;
+	
+
 	$scope.sortKey = '-id';
 	$scope.reverse = true;
 	$scope.query = "";
@@ -234,4 +226,49 @@ function tab2init($scope, $http, $compile, $filter, $rootScope){
             // Draw our timeline with the created data and options
             timeline.draw(data, options);
 
+}
+//getData.$inject = ['$scope','itemsFactory'];
+
+
+function tab3init($scope, $http, reddit){
+
+	/*$http({method: 'GET', url: '/cart/redditData/'}).
+			success(function(data, status, headers, config) {
+				var dataArr = [];
+				for (var i = 0; i < data.data.children.length; i++) {
+					dataArr.push(data.data.children[i].data)
+					
+				};
+
+				$scope.data = dataArr;
+				drawData($scope.data);
+			}).
+			error(function(data, status, headers, config) {
+				console.log("load error", status)
+			});
+	function drawData(scope){
+		var width = $(window).width(),
+	    height = $(window).height();
+		var svg = d3.select("body").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+
+			console.log($scope.data)
+		var circle = svg.selectAll("circle").data($scope.data);
+		circle.enter().append("circle");
+		circle
+		    .attr("cx", function(d) {
+		    	console.log(d)
+		    	return d.ups/10;
+		    })
+		    .attr("cy", function(d) {
+		    	return d.downs/10;
+		    })
+		    .attr("r", function(d) {
+		    	return d.score/100;
+		    });
+		circle.exit().remove();
+			circle.transition().duration(2500).delay(0).style("fill", "steelblue");
+		
+	}*/
 }

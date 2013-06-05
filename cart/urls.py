@@ -28,4 +28,6 @@ urlpatterns = patterns('',
     url(r'^api/', 'cart.views.getItems'),
     url(r'^apiSet/new/(?P<id>[a-zA-Z_.]\w*)', 'cart.views.changeItems'),
     url(r'^apiSet/(?P<id>\d*)', 'cart.views.editItems'),
+    url(r'^redditData/', 'cart.views.fromReddit'),
+    url(r'^userData/', 'cart.views.fromRedditUser'),
 )
