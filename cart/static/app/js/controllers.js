@@ -230,7 +230,7 @@ function tab2init($scope, $http, $compile, $filter, $rootScope){
 //getData.$inject = ['$scope','itemsFactory'];
 
 
-function tab3init($scope, $http, reddit){
+function tab3init($scope, $http){
 
 	/*$http({method: 'GET', url: '/cart/redditData/'}).
 			success(function(data, status, headers, config) {

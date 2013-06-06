@@ -54,4 +54,16 @@ angular.module('myApp.services', ['ngResource']).
 			    return defer.promise
 			}
 		}
+	}]).
+	factory('grabusers', ['$http', '$q', function($http, $q) {
+		var defer = $q.defer();
+		$http({method: 'GET', url: '/cart/grabusers/'}).
+		success(function(data, status, headers, config) {	
+			defer.resolve(data);
+		}).
+		error(function(data, status, headers, config) {
+			console.log("load error", status);
+			return false;
+		});
+	    return defer.promise
 	}]);

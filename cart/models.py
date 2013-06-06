@@ -33,3 +33,10 @@ class ExtData(models.Model):
     duration = models.FloatField(default=0)
     done = models.BooleanField(default=False)
     eta = models.DateTimeField(default=datetime.date.today)
+
+
+class UserListPost(models.Model):
+    title = models.CharField(max_length=1000)
+    data = models.CharField(max_length=10000000)
+    #data = DictField()
+    date = models.DateTimeField(default=datetime.date.today)

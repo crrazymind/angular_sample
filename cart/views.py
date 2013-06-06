@@ -2,31 +2,18 @@ from django.shortcuts import get_object_or_404, render, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
-from cart.models import Choice, Poll, ExtData
+from cart.models import Choice, Poll, ExtData, UserListPost
 from fetchExternal import FetchExternal
 from django.forms.models import model_to_dict
 import datetime
 import time
 import urllib2
+import httplib
 import json
 import os
 import time
-
+import ast
 from django.views.decorators.csrf import csrf_exempt
-
-
-def memorize_old(function):
-    memo = {}
-
-    def wrapper(*args):
-        if args in memo:
-            print "returning %s from cache" % memo[args]
-            return memo[args]
-        else:
-            rv = function(*args)
-            memo[args] = rv
-        return rv
-    return wrapper
 
 
 class memorize(object):
@@ -176,3 +163,85 @@ def fromRedditUser(request):
     except ValueError:
             print('Could not request data from server', ValueError)
             return HttpResponse({})
+
+
+def grabContent(result, dataUsers, userlist, listUpdate):
+    tempData = json.loads(result).get('data').get('children')
+    for item in tempData:
+        post = item.get('data')
+        user = post.get('author')
+        if listUpdate is True:
+            userlist.append(user)
+        print post.get('author')
+        print post.get('id')
+        print "/_____/"
+        if dataUsers.get(user):
+            dataUsers.get(user).update({post.get('id'): post})
+        else:
+            dataUsers.update({user: {post.get('id'): post}})
+
+
+def getDataForUser(name, dataUsers, conn, idx, userlist):
+    try:
+        hdr = {'User-Agent': 'ololo bot'}
+        url = '/user/' + name + '/.json'
+        conn.request('GET', url, headers=hdr)
+        result = conn.getresponse().read()
+        userlist.remove(name)
+        grabContent(result, dataUsers, userlist, False)
+
+        print str(idx) + " iteration "
+    except ValueError:
+            print('Could not request for ', name)
+
+
+def collectData(request):
+    dataUsers = dict()
+    userlist = []
+    hdr = {'User-Agent': 'ololo bot'}
+    conn = httplib.HTTPConnection('www.reddit.com')
+    url = '/.json'
+    conn.request('GET', url, headers=hdr)
+    result = conn.getresponse().read()
+    grabContent(result, dataUsers, userlist, True)
+
+    for idx, user in enumerate(userlist):
+        getDataForUser(user, dataUsers, conn, idx, userlist)
+
+    conn.close()
+    print len(str(dataUsers))
+    model = UserListPost(title="user", data=str(dataUsers), date=datetime.datetime.now())
+    model.save()
+    return HttpResponse(json.dumps(dataUsers))
+
+
+class BigData():
+    def __init__(self):
+        self.cache = {}
+
+    def _reset(self):
+        self.cache = {}
+
+    def _set(self, data):
+        print "caching..."
+        self.cache["data"] = data
+
+    def _get(self):
+        print "returning from cache"
+        return self.cache["data"]
+
+    def _getLength(self):
+        return len(self.cache)
+
+dataCache = BigData()
+
+
+def grabUserData(request):
+    if dataCache._getLength() is 1:
+        return HttpResponse(dataCache._get())
+    else:
+        item = UserListPost.objects.get(title="user")
+        result = ast.literal_eval(item.data)
+        dataCache._set(json.dumps(result))
+        return HttpResponse(json.dumps(result))
+    #json.dumps(data, default=dthandler)
