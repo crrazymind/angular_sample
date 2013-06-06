@@ -17,3 +17,5 @@ pyjade==1.9
 pymongo==2.3
 versiontools==1.9.1
 virtualenv==1.8.2
+dj-database-url==0.2.1
+gunicorn==0.17.2
