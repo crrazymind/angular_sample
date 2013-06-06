@@ -105,7 +105,7 @@ var app = angular.module('myApp.directives', []);
 					var userNode, post;
 
 					var initNode = nodes.push({
-						user: true,
+						user: 3,
 						title: "initial",
 						post: {},
 						ind: 0,
@@ -114,7 +114,7 @@ var app = angular.module('myApp.directives', []);
 					for (var node in data){
 						post = data[node];
 						userNode = nodes.push({
-							user: true,
+							user: 8,
 							title: node,
 							post: post,
 							ind: ind,
@@ -128,10 +128,9 @@ var app = angular.module('myApp.directives', []);
 							value: 1
 						});
 						for (var item in post){
-								//console.log(post[item].num_comments)
 								var postItem = nodes.push({
 									title: post[item].title,
-									user: false,
+									user: 5,
 									post: post[item],
 									group: ind
 								});
@@ -166,7 +165,7 @@ var app = angular.module('myApp.directives', []);
 							.data(nodes)
 							.enter().append("circle")
 							.attr("class", "node")
-							.attr("r", function(d) { return d.user ? 8 : 5 })
+							.attr("r", function(d) { return d.user})
 							.attr("data-title", function(d) { return d.title })
 							.attr("data-ind", function(d) { return d.ind })
 							.style("fill", function(d) { return color(d.group); })
