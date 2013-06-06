@@ -12,8 +12,8 @@ djangotoolbox==0.9.2
 docutils==0.10
 jsonfield==0.9.6
 metron==1.1
-pinax-theme-bootstrap > 1
-pinax-theme-bootstrap-account > 1
+pinax-theme-bootstrap >= 1
+pinax-theme-bootstrap-account >= 1
 pinax-utils>1
 psycopg2==2.4.6
 pyjade==1.9
