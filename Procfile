@@ -1,1 +1,1 @@
-web: python my_django_app/manage.py collectstatic --noinput; gunicorn singlePage.wsgi
+web: python singlePage/manage.py collectstatic --noinput; gunicorn singlePage.wsgi
