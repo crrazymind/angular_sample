@@ -18,3 +18,4 @@ urlpatterns = patterns('',
 #    urlpatterns += patterns('',
 #        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
 #    )
+#redis://redistogo:591b10dfa5f62ec22baa0ec86e3069d6@dory.redistogo.com:10850/
