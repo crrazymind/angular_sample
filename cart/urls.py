@@ -2,6 +2,9 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import DetailView, ListView
 from cart.models import Poll
 from django.utils import timezone
+from django.conf import settings
+
+admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$',
@@ -21,6 +24,7 @@ urlpatterns = patterns('',
             model=Poll,
             template_name='polls/results.html'),
         name='results'),
+    url(r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
     url(r'^(?P<poll_id>\d+)/vote/$', 'cart.views.vote', name='vote'),
     url(r'^app/partials/(?P<id>[a-zA-Z_.]\w*)', 'cart.views.app_child'),
     url(r'^app/', 'cart.views.app_view', name="stock"),
