@@ -13,7 +13,8 @@ urlpatterns = patterns('',
     url(r'^cart/', include('cart.urls', namespace="polls")),
     url(r'^admin/', include(admin.site.urls)),
 )
+print settings.STATIC_ROOT
 if not settings.DEBUG:
     urlpatterns += patterns('',
-    	(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
     )
